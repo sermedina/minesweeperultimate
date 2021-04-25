@@ -1,0 +1,22 @@
+.error{
+	color: red;
+}
+
+.success{
+	color: green;
+}
+
+form fieldset { padding: 20px; }
+div.control-group { margin-bottom: 20px; }
+div.control-group label.control-label { width: 300px; }
+div.control-group div.controls { width: 400px; }
+div.controls span { color: red; font-size: 0.8em; }
+
+
+
+div.alert { border-radius: 4px; margin: 5px 0; padding: 8px; background-color: #dff0d8; color: #468847; }
+
+.aParent div {
+  float: left;
+  clear: none; 
+}

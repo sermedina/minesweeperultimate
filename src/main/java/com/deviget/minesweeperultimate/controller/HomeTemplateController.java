@@ -1,0 +1,33 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.deviget.minesweeperultimate.controller;
+
+
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/home")
+public class HomeTemplateController {
+    
+  
+    @RequestMapping(value="/games")
+    public String getGamesTemplate() {
+    	return "games";	
+    }
+    
+    @RequestMapping(value="/gamedetails")
+    public String getGameDetailsTemplate() {
+    	return "gamedetails";	
+    }
+    
+
+
+   
+}
+
+
