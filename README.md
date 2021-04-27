@@ -4,7 +4,7 @@ Minesweeper persistent game with Java Spring framework and AngularJS.
 First steps
 
 Backend features:\
--Spring security authentication provider.
+-Spring security authentication provider.\
 -Spring data source.\
 -User and Game beans with relationships, DAOs, repositories and basic controllers.\
 -Spring boot configuration.\
