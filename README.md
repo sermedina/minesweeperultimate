@@ -7,12 +7,12 @@ Backend features:\
 -Spring security authentication provider.\
 -Spring data source.\
 -User and Game beans with relationships, DAOs, repositories and basic controllers.\
--Spring boot configuration.\
+-Spring boot configuration.
 
 Frontend features:\
 -AngularJS basic routing and SPA.\
 -AngularJS Services and Controllers for API access.\
--Login and Home templates.\
+-Login and Home templates.
 
 
 Logical Decisions:
