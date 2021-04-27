@@ -28,6 +28,24 @@ App.config(['$routeProvider', function($routeProvider) {
 			templateUrl: 'accessDenied'
                 
                 })
+                
+                .when('/home/games', {
+			templateUrl: 'home/games',
+			controller : "GameController as ctrl"
+	
+		})
+                
+                
+		.when('/game/gamedetails/:id', {
+			templateUrl: 'game/gamedetails',
+			controller : "GameDetailsController as ctrl"
+			
+		})
+                
+                 .when('/newGame', {
+			templateUrl: 'game/newGame',
+                	controller : "GameController as ctrl"
+		})
       
 	
 		.otherwise({redirectTo:'/'});

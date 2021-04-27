@@ -7,6 +7,7 @@ package com.deviget.minesweeperultimate.controller;
 
 
 import com.deviget.minesweeperultimate.pojo.Game;
+import com.deviget.minesweeperultimate.pojo.Response;
 import com.deviget.minesweeperultimate.pojo.User;
 import com.deviget.minesweeperultimate.service.AuthenticationService;
 import com.deviget.minesweeperultimate.service.GameService;
@@ -19,10 +20,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.deviget.minesweeperultimate.service.UserService;
 import java.util.ArrayList;
+import javax.validation.Valid;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
  
 @Controller
-@RequestMapping("/item")
-public class ItemController {
+@RequestMapping("/game")
+public class GameController {
  
     @Autowired
     UserService userService;
@@ -33,18 +38,32 @@ public class ItemController {
     @Autowired
     GameService gameService;
     
+    @RequestMapping(value = "/newGame", method = RequestMethod.GET)
+    public String newGame() {
+
+       return "newGame";
+    }
     
-    @RequestMapping(value="/games/{userId}")
-    public ResponseEntity<List> listGamesOfUser(@PathVariable("userId") long userId) {
+    @RequestMapping(value="/newGame",method=RequestMethod.POST)
+    public @ResponseBody Response newGame(@Valid @RequestBody  Game newGame ){
+        Response res = new Response();  
+
+        User user= (User) userService.findByUsername(authenticationService.getPrincipal());
+        newGame.setUser(user);
+        gameService.save(newGame);
+        res.setStatus("Game created successfully");
+
+        return res;
+    }
+    
+    
+    @RequestMapping(value="/games")
+    public ResponseEntity<List> listGames() {
         System.out.println("*************************************ListGamesOfUser");
         
-        User user= (User) userService.findById(userId);
+        User user= (User) userService.findByUsername(authenticationService.getPrincipal());
         List<Game> games= new ArrayList<>();
-        if (user.getUsername().equals(authenticationService.getPrincipal())) {
-            
-            games= userService.getGames(user);
-            
-        }
+        games= userService.getGames(user);
 
         if(games.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -52,7 +71,7 @@ public class ItemController {
         return new ResponseEntity<>(games, HttpStatus.OK);
     }
     
-    @RequestMapping(value="/games/{id}")
+    @RequestMapping(value="/gamedetails/{id}")
     public ResponseEntity<Game> findSpecificGame(@PathVariable("id") long id) {
         System.out.println("*************************************findSpecificGame");
         Game router =   (Game) gameService.findById(id);

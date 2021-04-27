@@ -6,8 +6,12 @@
 package com.deviget.minesweeperultimate.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -15,8 +19,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
 
 /**
  *
@@ -24,13 +32,22 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "game")
+@TypeDefs({
+    @TypeDef(name = "json", typeClass = JsonStringType.class),
+    @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
+})
 public class Game implements Serializable {
     
     private Long id;
     private String board;
     private boolean finished;
+    private int numberOfRows;
+    private int numberOfColumns;
+    private int numberOfMines;
+    private Date lastTimePlayed;
+    private Date totalTimePlayed;
     private User user;
-    
+  
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {
@@ -41,6 +58,9 @@ public class Game implements Serializable {
         this.id = id;
     }
     
+    @Type(type = "jsonb")
+    @Column(columnDefinition = "jsonb")
+    //@Lob
     public String getBoard() {
         return board;
     }
@@ -55,6 +75,51 @@ public class Game implements Serializable {
 
     public void setFinished(boolean finished) {
         this.finished = finished;
+    }
+    
+    @Column(name="number_of_rows")
+    public int getNumberOfRows() {
+        return numberOfRows;
+    }
+
+    public void setNumberOfRows(int numberOfRows) {
+        this.numberOfRows = numberOfRows;
+    }
+
+    @Column(name="number_of_columns")
+    public int getNumberOfColumns() {
+        return numberOfColumns;
+    }
+
+    public void setNumberOfColumns(int numberOfColumns) {
+        this.numberOfColumns = numberOfColumns;
+    }
+
+    @Column(name="number_of_mines")
+    public int getNumberOfMines() {
+        return numberOfMines;
+    }
+
+    public void setNumberOfMines(int numberOfMines) {
+        this.numberOfMines = numberOfMines;
+    }
+    
+    @Column(name="last_time_played")
+    public Date getLastTimePlayed() {
+        return lastTimePlayed;
+    }
+
+    public void setLastTimePlayed(Date lastTimePlayed) {
+        this.lastTimePlayed = lastTimePlayed;
+    }
+    
+    @Column(name="total_time_played")
+    public Date getTotalTimePlayed() {
+        return totalTimePlayed;
+    }
+
+    public void setTotalTimePlayed(Date totalTimePlayed) {
+        this.totalTimePlayed = totalTimePlayed;
     }
     
     @JsonIgnore

@@ -39,16 +39,16 @@
 
 
 <script src="resources/js/angular/app.js"></script>
-<script src="resources/js/service/UserService.js"></script>
 <script src="resources/js/service/ProfileService.js"></script>
-<script src="resources/js/service/ClientService.js"></script>
+<script src="resources/js/service/GameService.js"></script>
 <script src="resources/js/service/ResourceService.js"></script>
 
-<script src="resources/js/controller/UserController.js"></script>
-<script src="resources/js/controller/UserDetailsController.js"></script>
+
+
+
 <script src="resources/js/controller/HomeController.js"></script>
-<script src="resources/js/controller/ClientController.js"></script>
-<script src="resources/js/controller/ClientDetailsController.js"></script>
+<script src="resources/js/controller/GameController.js"></script>
+<!--<script src="resources/js/controller/GameDetailsController.js"></script>-->
 
 
 
@@ -116,11 +116,11 @@
             <!--//down-->
             <div class="menu">
                 <ul id="menu" >
-                    <li id="menu-academico" ><a href="#"><i class="fa fa-bomb"></i> <span>New game</span> <span  style="float: right"></span></a>
+                    <li id="menu-academico" ><a href="#/newGame"><i class="fa fa-bomb"></i> <span>New game</span> <span  style="float: right"></span></a>
                         <ul id="menu-academico-sub" >
                         </ul>
                     </li>
-                    <li id="menu-academico" ><a href="#/games"><i class="fa fa-hourglass"></i> <span>Game history</span> <span  style="float: right"></span></a>
+                    <li id="menu-academico" ><a href="#/home/games"><i class="fa fa-hourglass"></i> <span>Game history</span> <span  style="float: right"></span></a>
 
             </div>
         </div>	
