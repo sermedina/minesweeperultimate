@@ -17,7 +17,7 @@ Frontend features
 
 Logical Decisions:
 
--For the model, User one to many relationship with Games. This allows to fetch games from the user when login.
+-For the model, User one to many relationship with Games. This allows to fetch games from the user when login.\
 -Login with spring security, no roles needed.
 -PostgreSQL database.
 -The rows and columns can be a max of 30 each as 30x30 is the standard expert board.
