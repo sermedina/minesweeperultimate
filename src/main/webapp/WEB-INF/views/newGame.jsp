@@ -64,22 +64,7 @@
         <button class="btn btn-success" ng-disabled="gameForm.$invalid" type="submit" id="sendBtn">Start game</button>
         </fieldset>
     </form>
-    
-    
-
 </div>
-    
-    <div ng-repeat="row in newBoard track by $index">
-        <ul style="list-style-type: none;">
-            <li style="">
-                <div ng-repeat="cell in row track by $index">
-                    <button style="float:left">{{ cell.mineNearby }}</button>
-                </div>
-                <br>
-            </li>
-        </ul>
-    </div>
-    
 
 </body>
 </html>

@@ -124,6 +124,7 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$route'
                   $scope.message = response.status;           
                   $scope.submitted = false;
                   self.formData=response.data;
+                  $location.path("game/currentgame/" + response.result);
               },
               
               function (errors) {
@@ -143,7 +144,7 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$route'
     self.updateGame = function(){            
 
             self.game.lastTimePlayed= new Date();
-
+            self.game.board= JSON.stringify(self.parseBoard);
             GameService.updateGame(self.game)
               .then (function(response) {
                   $scope.message = response.status;           

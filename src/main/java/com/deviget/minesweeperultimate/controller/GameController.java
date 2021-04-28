@@ -59,17 +59,19 @@ public class GameController {
         newGame.setUser(user);
         gameService.save(newGame);
         res.setStatus("Game created successfully");
+        res.setResult(newGame.getId());
 
         return res;
     }
     
-    @RequestMapping(value="/newGame",method=RequestMethod.POST)
+    @RequestMapping(value="/updateGame",method=RequestMethod.PUT)
     public @ResponseBody Response updateGame(@Valid @RequestBody  Game currentGame ){
         Response res = new Response();  
 
-        Optional<Game> updateGame =   (Optional<Game>) gameService.findById(currentGame.getId());
-       // gameService.save(updateGame);
-        res.setStatus("Game created successfully");
+        User user= (User) userService.findByUsername(authenticationService.getPrincipal());
+        currentGame.setUser(user);
+        gameService.save(currentGame);
+        res.setStatus("Game updated successfully");
 
         return res;
     }
