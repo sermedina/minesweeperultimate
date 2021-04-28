@@ -63,6 +63,17 @@ public class GameController {
         return res;
     }
     
+    @RequestMapping(value="/newGame",method=RequestMethod.POST)
+    public @ResponseBody Response updateGame(@Valid @RequestBody  Game currentGame ){
+        Response res = new Response();  
+
+        Optional<Game> updateGame =   (Optional<Game>) gameService.findById(currentGame.getId());
+       // gameService.save(updateGame);
+        res.setStatus("Game created successfully");
+
+        return res;
+    }
+    
     
     @RequestMapping(value="/games")
     public ResponseEntity<List> listGames() {

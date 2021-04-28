@@ -140,6 +140,30 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$route'
         
     },
             
+    self.updateGame = function(){            
+
+            self.game.lastTimePlayed= new Date();
+
+            GameService.updateGame(self.game)
+              .then (function(response) {
+                  $scope.message = response.status;           
+                  self.formData=response.data;
+              },
+              
+              function (errors) {
+                 
+                    $scope.serverErrors=errors.data;
+                    console.log(errors.data);
+                    for (var errorKey in errors.data) {
+                    $scope.gameForm[errorKey].$dirty = true;
+                    }                 
+                  
+               
+            });
+        
+        
+    },        
+            
     self.getGame = function(id){
         GameService.getGame(id)
         .then(
@@ -262,6 +286,8 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$route'
                  self.game.movesLeft--;
                  self.parseBoard[row][column].isDiscovered=true;
         }
+        
+        self.updateGame();
     },
             
     self.discoverAllCells = function()  {

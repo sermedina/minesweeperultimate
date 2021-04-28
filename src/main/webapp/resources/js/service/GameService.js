@@ -43,6 +43,21 @@ App.factory('GameService', ['$http', '$q','$location', function($http, $q, $loca
             );
         },
         
+        updateGame: function(game){
+            return $http.put('game/updateGame/', game)
+            .then(
+                function(response){
+                    return response.data;
+                }, 
+                function(errResponse){
+                    console.error('Error while updating game');
+                    return $q.reject(errResponse);
+                }
+            );
+        },
+        
+        
+        
         
     };
 }]);
