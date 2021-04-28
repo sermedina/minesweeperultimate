@@ -1,16 +1,14 @@
-App.controller('GameController', ['$rootScope','$scope', 'GameService', '$location','DTOptionsBuilder', 'DTColumnDefBuilder',
-    function($rootScope,$scope, GameService, $location,DTOptionsBuilder,DTColumnDefBuilder) {            
+App.controller('GameController', ['$rootScope','$scope', 'GameService', '$route','$routeParams','$location','DTOptionsBuilder', 'DTColumnDefBuilder',
+    function($rootScope,$scope, GameService,$route,$routeParams, $location,DTOptionsBuilder,DTColumnDefBuilder) {            
     
     var self = this;
     
+    var param = $routeParams.id;
+
+    $scope.submitted = false;
     
-    $scope.submitted = false;            
-    
-    clearValidationErrorMessages = function() {
-    	self.formData.$setPristine(true);
-    	$scope.serverErrors="";
-    },
-            
+    self.flagMode=false;
+
     self.formData = {};        
         
     self.gamesForList = {};
@@ -37,19 +35,21 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$locati
             },
             function(errResponse){
                 console.error('Error while fetching games');
-                //self.showMessageError('Error while fetching users',errResponse);
             }
         );
     };
     
      self.isValidCell = function(row,col)
         {
+            
+            let rows = self.formData.numberOfRows!==undefined?self.formData.numberOfRows:self.game.numberOfRows;
+            let columns = self.formData.numberOfColumns!==undefined?self.formData.numberOfColumns:self.game.numberOfColumns;
             // Returns true if row number and column number
             // is in range
-            return (row >= 0) && (row < self.formData.numberOfRows) &&
-                   (col >= 0) && (col < self.formData.numberOfColumns);
-        }
-
+            return (row >= 0) && (row < rows) &&
+                   (col >= 0) && (col < columns);
+        },
+                
     
     self.newGame = function(){
             $scope.submitted = true;
@@ -57,6 +57,7 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$locati
             const rows= self.formData.numberOfRows;
             const columns= self.formData.numberOfColumns;
             let mines = self.formData.numberOfMines;
+            const movesLeft= (rows*columns) - mines;
             
             const cells= rows*columns;
             
@@ -73,8 +74,7 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$locati
             // isDiscovered: true if the user has clicked on it
             // isFlag: true if the user has put a flag
             
-        
-            //let board = Array(rows).fill({isDiscovered:false,isFlag:false, mineNearby:0}).map(()=>Array(columns).fill({isDiscovered:false,isFlag:false, mineNearby:0}))
+       
             let board= [];
             
             for (i=0; i<rows; i++) {
@@ -92,13 +92,8 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$locati
                const rand2 = (Math.random()*10) % (rows*columns);
                var x = parseInt(rand1 % rows);
                var y = parseInt(rand2 % columns);
-               console.log("X " + x);
-               console.log("Y " + y);
-               //var test = 1.2;
-               //var test2= Math.abs(test);
-              // console.log("TEST " + test2);
 
-               if (board[x][y].mineNearby != -1)
+               if (board[x][y].mineNearby !== -1)
                {
                    board[x][y].mineNearby=-1;
                    mines--;
@@ -107,36 +102,28 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$locati
            
            for (i=0; i<rows; i++) {              
                 for (j=0; j<columns; j++) {
-                    let count= self.countNearbyMines(i,j,board);
-                    //console.log("BOARD "+ i + " " + j);
-                    //console.log("VALUE " +board[i][j].mineNearby);
-                    //console.log("COUNT " + count);
-                    
-                    if (count>0 && board[i][j].mineNearby!=-1) {
-                        //console.log("NEW VALUE " + count);
+                    let count= self.countNearbyMines(i,j,board);                   
+                    if (count>0 && board[i][j].mineNearby!== -1) {
                         board[i][j].mineNearby=count;
                     }            
                 }
                 
             }
-           
-
-           
+    
            $scope.newBoard= board;
            
            const newBoard= JSON.stringify(board);
-        
 
-            console.log(newBoard);
-            
             self.formData.board=newBoard;
+            self.formData.movesLeft=movesLeft;
+            self.formData.currentMoveIndex=0;
+            self.formData.lastTimePlayed=new Date();
 
             GameService.newGame(self.formData)
               .then (function(response) {
                   $scope.message = response.status;           
                   $scope.submitted = false;
                   self.formData=response.data;
-                  //self.addSuccessful();
               },
               
               function (errors) {
@@ -144,7 +131,6 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$locati
                     $scope.serverErrors=errors.data;
                     console.log(errors.data);
                     for (var errorKey in errors.data) {
-                    //console.log(errorKey + ':' + errors.data[errorKey]);
                     $scope.gameForm[errorKey].$dirty = true;
                     }                 
                   
@@ -153,18 +139,37 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$locati
         
         
     },
-   
+            
+    self.getGame = function(id){
+        GameService.getGame(id)
+        .then(
+            function(d) {
+                 self.game = d;
+                 self.parseBoard= JSON.parse(self.game.board);
+                      
+            },
+            function(errResponse){
+                console.error('Error while fetching game');             
+            }            
+        );
+
+    },
+            
+            
+   //These functions are based in
+   //https://www.geeksforgeeks.org/cpp-implementation-minesweeper-game/
+   //implementation in C++ and trough console
+   //With a couple of modifications and refactoring for graphical javascript board
+  
       
    self.countNearbyMines = function(row,col,board){
 
     let count = 0;
-  
 
-  
         // Up cell
         if (self.isValidCell(row-1, col))
         {
-               if (board[row-1][col].mineNearby== -1)
+               if (board[row-1][col].mineNearby=== -1)
                count++;
         }
  
@@ -172,14 +177,14 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$locati
         // Down cell
         if (self.isValidCell(row+1, col))
         {
-               if (board[row+1][col].mineNearby== -1)
+               if (board[row+1][col].mineNearby=== -1)
                count++;
         }
   
-        // Right
+        // Right cell
         if (self.isValidCell(row, col+1))
         {
-            if (board[row][col+1].mineNearby== -1)
+            if (board[row][col+1].mineNearby=== -1)
                count++;
         }
   
@@ -187,7 +192,7 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$locati
         // Left cell
         if (self.isValidCell(row, col-1))
         {
-               if (board[row][col-1].mineNearby== -1)
+               if (board[row][col-1].mineNearby=== -1)
                count++;
         }
   
@@ -195,7 +200,7 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$locati
         // Upper-right cell
         if (self.isValidCell(row-1, col+1))
         {
-            if (board[row-1][col+1].mineNearby== -1)
+            if (board[row-1][col+1].mineNearby=== -1)
                count++;
         }
   
@@ -203,7 +208,7 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$locati
         // Upper-left cell
         if (self.isValidCell(row-1, col-1))
         {
-             if (board[row-1][col-1].mineNearby== -1)
+             if (board[row-1][col-1].mineNearby=== -1)
                count++;
         }
  
@@ -211,7 +216,7 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$locati
         // Bottom-right cell
         if (self.isValidCell(row+1, col+1))
         {
-               if (board[row+1][col+1].mineNearby== -1)
+               if (board[row+1][col+1].mineNearby=== -1)
                count++;
         }
   
@@ -219,21 +224,169 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$locati
         // Bottom-left cell
         if (self.isValidCell(row+1, col-1))
         {
-            if (board[row+1][col-1].mineNearby== -1)
+            if (board[row+1][col-1].mineNearby=== -1)
                count++;
-        }
-        
+        }        
   
         return count;
     },
             
+    
+    self.discoverCell = function(row,column){
+                
+        if  (self.parseBoard[row][column].isDiscovered || self.game.finished) {
+            return;
+        }
+        
+        self.game.currentMoveIndex++;
+        switch(self.parseBoard[row][column].mineNearby) {
+            case -1:
+              self.discoverAllCells();
+              alert("YOU LOSE!");
+              self.game.finished=true;
+              break;
+            case 0:
+                if(self.game.movesLeft===1) {
+                alert("YOU WIN");
+                self.game.movesLeft--;
+                self.game.finished=true;
+            } else {
+                self.discoverZeroCell(row,column); 
+            }
+              break;
+            default:
+                if (self.game.movesLeft===1) {
+                    alert("YOU WIN");
+                    self.game.finished=true;
+                }
+                 self.game.movesLeft--;
+                 self.parseBoard[row][column].isDiscovered=true;
+        }
+    },
+            
+    self.discoverAllCells = function()  {
+        
+        const rows = self.game.numberOfRows;
+        const columns = self.game.numberOfColumns;
+        for (i=0; i<rows; i++) {              
+                for (j=0; j<columns; j++) {                    
+                    self.parseBoard[i][j].isDiscovered=true;                
+                }
+                
+        }       
+    },
+            
+    self.discoverZeroCell = function(row,col) 
+    {
 
- 
+        // Base Case of Recursion
+        if (self.parseBoard[row][col].isDiscovered)
+            return false;
+        
+        //Discover the cell and substract move counter
+        self.parseBoard[row][col].isDiscovered=true;
+        self.game.movesLeft--;
 
-    self.getGameList();
+            // Calculate the number of adjacent mines and put it
+            // on the board
+
+            let count = self.countNearbyMines(row, col, self.parseBoard);
+            
+
+            if (!count)
+            {
+                
+                //Recur for all 8 adjacent cells
+          
+                // Up cell
+                if (self.isValidCell(row-1, col))
+                {
+                    if (self.parseBoard[row-1][col].mineNearby!== -1) {
+                       self.discoverZeroCell(row-1, col);
+                   }
+                }
+
+                // Down cell
+                if (self.isValidCell(row+1, col))
+                {
+                    if (self.parseBoard[row+1][col].mineNearby!== -1) {
+                        self.discoverZeroCell(row+1, col);
+                    }
+                }
+
+                //Right cell
+                if (self.isValidCell(row, col+1))
+                {
+                    if (self.parseBoard[row][col+1].mineNearby!== -1) {
+                        self.discoverZeroCell(row, col+1);
+                    }    
+                }
+
+                //Left cell
+                if (self.isValidCell(row, col-1))
+                {
+                    if (self.parseBoard[row][col-1].mineNearby!== -1) { 
+                        self.discoverZeroCell(row, col-1);
+                    }
+                }
+
+                //Upper-right cell
+                if (self.isValidCell(row-1, col+1))
+                {
+                    if (self.parseBoard[row-1][col+1].mineNearby!== -1) {
+                        self.discoverZeroCell(row-1, col+1);
+                    }
+                }
+
+                //Upper-left cell
+                if (self.isValidCell(row-1, col-1))
+                {
+                     if (self.parseBoard[row-1][col-1].mineNearby!== -1) {
+                        self.discoverZeroCell(row-1, col-1);
+                    }
+                }
+
+                //Bottom-right cell
+                if (self.isValidCell(row+1, col+1))
+                {
+                     if (self.parseBoard[row+1][col+1].mineNearby!== -1) {
+                        self.discoverZeroCell(row+1, col+1);
+                    }
+                }
+
+                //Bottom-left cell
+                if (self.isValidCell(row+1, col-1))
+                {
+                    if (self.parseBoard[row+1][col-1].mineNearby!== -1) {
+                        self.discoverZeroCell(row+1, col-1);
+                    }
+                }
+            }
+
+            return false;
+},
+    
+   
+    self.enableFlagMode = function()  {
+        self.flagMode=true;      
+    },
+    
+    self.putFlag = function(row,column)  {
+        self.parseBoard[row][column].isFlag=true;       
+    };
+      
+
+        
+    if (param) {
+        self.getGame(param);
+    } else {
+         self.getGameList();
+    }    
+   
     
     self.showDetail = function (id) {
-            $location.path("game/gamedetails/" + id);
+        $location.path("game/currentgame/" + id);
+        self.getGame(id);
     };
     
     self.opennewGame = function () {

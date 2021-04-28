@@ -11,7 +11,8 @@
 	            <thead>
 	                <tr class="active">
 	                    <th>ID</th>
-	                    <th>Board</th>
+	                    <!--<th>Board</th>-->
+                            <th>Moves left</th>
                             <th>Finished</th>
                             <th>Last time played</th>
                             <th>Total time played</th>
@@ -20,9 +21,10 @@
 	            </thead>
 	            <tbody>
                         <tr ng-repeat="game in ctrl.gamesForList">            
-                    <td>{{ game.id }}</td>
+                    <!--<td>{{ game.id }}</td>-->
+                    <td><a href="" ng-click="ctrl.showDetail(game.id)">{{ game.id }}</a></td>
                     
-                    <td><a href="" ng-click="ctrl.showDetail(game.id)">{{game.board}}</a></td>
+                    <td>{{ game.movesLeft }}</td>
                     <td>{{ game.finished }}</td>
                     <td>{{ game.lastTimePlayed | date:'MM/dd/yyyy  h:mma'  }}</td>
                     <td>{{ game.totalTimePlayed | date:'MM/dd/yyyy  h:mma'  }}</td>

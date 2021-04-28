@@ -5,7 +5,7 @@ App.factory('GameService', ['$http', '$q','$location', function($http, $q, $loca
     return {                                
 
         getGame: function(id){
-            return $http.get('game/gamedetails/'+id)
+            return $http.get('game/currentgame/'+id)
             .then(
                 function(response){                    
                     return response.data;                    

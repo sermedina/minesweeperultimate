@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.deviget.minesweeperultimate.service.UserService;
 import java.util.ArrayList;
+import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,6 +44,12 @@ public class GameController {
 
        return "newGame";
     }
+    
+    @RequestMapping(value="/currentgame")
+    public String getCurrentGameTemplate() {
+    	return "currentgame";	
+    }
+    
     
     @RequestMapping(value="/newGame",method=RequestMethod.POST)
     public @ResponseBody Response newGame(@Valid @RequestBody  Game newGame ){
@@ -71,14 +78,15 @@ public class GameController {
         return new ResponseEntity<>(games, HttpStatus.OK);
     }
     
-    @RequestMapping(value="/gamedetails/{id}")
+    @RequestMapping(value="/currentgame/{id}")
     public ResponseEntity<Game> findSpecificGame(@PathVariable("id") long id) {
         System.out.println("*************************************findSpecificGame");
-        Game router =   (Game) gameService.findById(id);
-        if(router == null){
+        
+        Optional<Game> game =   (Optional<Game>) gameService.findById(id);
+        if(!game.isPresent()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(router, HttpStatus.OK);
+        return new ResponseEntity<>(game.get(), HttpStatus.OK);
     }
       
    

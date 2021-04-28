@@ -36,9 +36,9 @@ App.config(['$routeProvider', function($routeProvider) {
 		})
                 
                 
-		.when('/game/gamedetails/:id', {
-			templateUrl: 'game/gamedetails',
-			controller : "GameDetailsController as ctrl"
+		.when('/game/currentgame/:id', {
+			templateUrl: 'game/currentgame',
+			controller : "GameController as ctrl"
 			
 		})
                 
@@ -46,6 +46,7 @@ App.config(['$routeProvider', function($routeProvider) {
 			templateUrl: 'game/newGame',
                 	controller : "GameController as ctrl"
 		})
+                
       
 	
 		.otherwise({redirectTo:'/'});
