@@ -6,8 +6,6 @@ import com.deviget.minesweeperultimate.service.AuthenticationService;
 import com.deviget.minesweeperultimate.service.UserService;
 import com.deviget.minesweeperultimate.validator.UserValidator;
 import javax.validation.Valid;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +33,6 @@ public class UserController {
     @Autowired
     private AuthenticationService authenticationService;
     
-    private static final Logger LOGGER = LogManager.getLogger(UserController.class.getName());
 
        
     @RequestMapping(value ="/", method = RequestMethod.GET)
@@ -67,7 +64,6 @@ public class UserController {
         Response res = new Response();  
 
         userService.save(userForm);
-        LOGGER.info("Account created successfully with id: " +  userForm.getId());
         res.setStatus("Account created successfully");
 
         return res;
@@ -80,12 +76,10 @@ public class UserController {
 
         if (error != null) {
             model.addAttribute("error", "Error: Invalid credentials.");
-            LOGGER.error("Invalid credentials");
         }
 
         if (logout != null) {
             model.addAttribute("message", "Session closed successfully");
-            LOGGER.info("Session closed successfully");
         }
 
         return "login";

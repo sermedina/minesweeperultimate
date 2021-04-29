@@ -14,7 +14,7 @@ div.controls span { color: red; font-size: 0.8em; }
 
 
 
-div.alert { border-radius: 4px; margin: 5px 0; padding: 8px; background-color: #dff0d8; color: #468847; }
+div.alert { border-radius: 4px; margin: 5px 0; padding: 8px;}
 
 .aParent div {
   float: left;
@@ -24,4 +24,9 @@ div.alert { border-radius: 4px; margin: 5px 0; padding: 8px; background-color: #
 .largeHeight {
     height: 24px;
     width: 25px;
+}
+
+.shortHeight {
+    height: 10px;
+    width: 10px;
 }

@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
-@ImportResource({"classpath:appconfig-mvc.xml","classpath:appconfig-data.xml", "classpath:appconfig-security.xml"})
+@ImportResource({"classpath:appconfig-mvc.xml","classpath:appconfig-data.xml"})
 
 public class Main {
 

@@ -10,8 +10,8 @@ package com.deviget.minesweeperultimate.filter;
 import com.deviget.minesweeperultimate.pojo.User;
 import com.deviget.minesweeperultimate.service.UserService;
 import java.util.ArrayList;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,11 +33,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider{
 @Autowired
 private UserService userService;
 
-
+@Lazy
 @Autowired
 private PasswordEncoder passwordEncoder;
 
-private final Logger log = Logger.getLogger("logging");
 
 
     @Override
@@ -46,7 +45,7 @@ private final Logger log = Logger.getLogger("logging");
         String password = auth.getCredentials().toString().trim();
         String hashedPassword = passwordEncoder.encode(password);      
         CustomWebAuthenticationDetails webAuthenticationDetails = ((CustomWebAuthenticationDetails) auth.getDetails());
-        String locale = webAuthenticationDetails.getLocale().toString();
+        //String locale = webAuthenticationDetails.getLocale().toString();
         
         try {
 
@@ -54,10 +53,6 @@ private final Logger log = Logger.getLogger("logging");
             if (!passwordEncoder.matches(password, user.getPassword())) {
                 throw new BadCredentialsException("Invalid password");
             }
-
-            log.info("Username: " + username);
-            log.info("Password: " + hashedPassword);
-            log.info("Locale: " + locale);
 
             return new UsernamePasswordAuthenticationToken(user, hashedPassword, new ArrayList<>());
         

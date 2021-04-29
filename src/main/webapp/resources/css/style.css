@@ -3742,9 +3742,6 @@ h4.title3{
     font-size: 0.9em;
     color: #777;
 }
-.font-red, .has-error .help-block, .parsley-required, .text-danger {
-        color: #00c6d7 !important;
-}
 .text-success.pull-right {
 color: #052963!important;
 }

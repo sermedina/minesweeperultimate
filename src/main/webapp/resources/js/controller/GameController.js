@@ -1,5 +1,5 @@
-App.controller('GameController', ['$rootScope','$scope', 'GameService', '$route','$routeParams','$location','DTOptionsBuilder', 'DTColumnDefBuilder',
-    function($rootScope,$scope, GameService,$route,$routeParams, $location,DTOptionsBuilder,DTColumnDefBuilder) {            
+App.controller('GameController', ['ngToast','$rootScope','$scope', 'GameService', '$route','$routeParams','$location','DTOptionsBuilder', 'DTColumnDefBuilder',
+    function(ngToast,$rootScope,$scope,GameService,$route,$routeParams, $location,DTOptionsBuilder,DTColumnDefBuilder) {            
     
     var self = this;
     
@@ -8,15 +8,17 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$route'
     $scope.submitted = false;
     
     self.flagMode=false;
+    
+    self.gameMode="Put flag";
 
     self.formData = {};        
         
     self.gamesForList = {};
-    
+       
                 
     self.rangeArray= function (start, end) {
-        return Array(end - start + 1).fill().map((_, idx) => start + idx)
-    }
+        return Array(end - start + 1).fill().map((_, idx) => start + idx);
+    },
     
 
     $scope.numberOfRowsList = self.rangeArray(3,30);
@@ -42,15 +44,15 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$route'
      self.isValidCell = function(row,col)
         {
             
-            let rows = self.formData.numberOfRows!==undefined?self.formData.numberOfRows:self.game.numberOfRows;
-            let columns = self.formData.numberOfColumns!==undefined?self.formData.numberOfColumns:self.game.numberOfColumns;
+            let rows = self.formData!==undefined && JSON.stringify(self.formData) !== '{}'?self.formData.numberOfRows:self.game.numberOfRows;
+            let columns = self.formData!==undefined && JSON.stringify(self.formData) !== '{}'?self.formData.numberOfColumns:self.game.numberOfColumns;
             // Returns true if row number and column number
             // is in range
             return (row >= 0) && (row < rows) &&
                    (col >= 0) && (col < columns);
         },
                 
-    
+
     self.newGame = function(){
             $scope.submitted = true;
             console.log(self.formData);
@@ -84,46 +86,20 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$route'
                 }
                 
             }
-            
-            //Setting mines
-            for (i=0; 0<mines; i++)
-            {
-               const rand1 = (Math.random()*10) % (rows*columns);
-               const rand2 = (Math.random()*10) % (rows*columns);
-               var x = parseInt(rand1 % rows);
-               var y = parseInt(rand2 % columns);
-
-               if (board[x][y].mineNearby !== -1)
-               {
-                   board[x][y].mineNearby=-1;
-                   mines--;
-               }
-           }
-           
-           for (i=0; i<rows; i++) {              
-                for (j=0; j<columns; j++) {
-                    let count= self.countNearbyMines(i,j,board);                   
-                    if (count>0 && board[i][j].mineNearby!== -1) {
-                        board[i][j].mineNearby=count;
-                    }            
-                }
-                
-            }
-    
+               
            $scope.newBoard= board;
            
            const newBoard= JSON.stringify(board);
 
             self.formData.board=newBoard;
             self.formData.movesLeft=movesLeft;
-            self.formData.currentMoveIndex=0;
+            self.formData.hasFirstMove=false;
             self.formData.lastTimePlayed=new Date();
 
             GameService.newGame(self.formData)
               .then (function(response) {
                   $scope.message = response.status;           
                   $scope.submitted = false;
-                  self.formData=response.data;
                   $location.path("game/currentgame/" + response.result);
               },
               
@@ -171,6 +147,7 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$route'
             function(d) {
                  self.game = d;
                  self.parseBoard= JSON.parse(self.game.board);
+                 console.log(self.parseBoard);
                       
             },
             function(errResponse){
@@ -183,8 +160,9 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$route'
             
    //These functions are based in
    //https://www.geeksforgeeks.org/cpp-implementation-minesweeper-game/
-   //implementation in C++ and trough console
-   //With a couple of modifications and refactoring for graphical javascript board
+   //implementation in C++ through console
+   //with a couple of modifications and refactoring for graphical javascript board.
+   //Safe first move logic improvement (in the link is terribly wrong -_-)
   
       
    self.countNearbyMines = function(row,col,board){
@@ -258,36 +236,85 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$route'
             
     
     self.discoverCell = function(row,column){
+        
+        
+        // This is to guarantee that the first move is
+        // always safe
+        // If it is the first move of the game
+        // We asure this by delaying the mine generation    
+        if (!self.game.hasFirstMove && self.game && !self.flagMode)
+        {
+            self.game.hasFirstMove=true;
+            const rows= self.game.numberOfRows;
+            const columns= self.game.numberOfColumns;
+            let mines = self.game.numberOfMines;
+            //Setting mines
+            for (i=0; 0<mines; i++)
+            {
+               const rand1 = (Math.random()*10) % (rows*columns);
+               const rand2 = (Math.random()*10) % (rows*columns);
+               var x = parseInt(rand1 % rows);
+               var y = parseInt(rand2 % columns);
+
+               if (self.parseBoard[x][y].mineNearby !== -1 && x!==row && y!==column)
+               {
+                   self.parseBoard[x][y].mineNearby=-1;
+                   mines--;
+               }
+           }
+           
+           for (i=0; i<rows; i++) {              
+                for (j=0; j<columns; j++) {
+                    let count= self.countNearbyMines(i,j,self.parseBoard);                   
+                    if (count>0 && self.parseBoard[i][j].mineNearby!== -1) {
+                        self.parseBoard[i][j].mineNearby=count;
+                    }            
+                }
+                
+            }
+        }
                 
         if  (self.parseBoard[row][column].isDiscovered || self.game.finished) {
             return;
         }
-        
-        self.game.currentMoveIndex++;
+        if (self.flagMode) {
+            if (self.parseBoard[row][column].isFlag) {
+                self.parseBoard[row][column].isFlag=false;
+            }else {
+                self.parseBoard[row][column].isFlag=true;
+            }    
+            self.updateGame();
+            return;
+        }
+
         switch(self.parseBoard[row][column].mineNearby) {
             case -1:
               self.discoverAllCells();
-              alert("YOU LOSE!");
+              ngToast.danger('YOU LOSE');
               self.game.finished=true;
               break;
             case 0:
                 if(self.game.movesLeft===1) {
-                alert("YOU WIN");
+                ngToast.create('YOU WIN!');
                 self.game.movesLeft--;
                 self.game.finished=true;
             } else {
-                self.discoverZeroCell(row,column); 
+                self.discoverZeroCell(row,column);
+                if(self.game.movesLeft===0) {
+                  ngToast.create('YOU WIN!');
+                  self.game.finished=true;
+                }
             }
               break;
             default:
                 if (self.game.movesLeft===1) {
-                    alert("YOU WIN");
+                    ngToast.create('YOU WIN!');
                     self.game.finished=true;
-                }
+                 }
                  self.game.movesLeft--;
+                 self.parseBoard[row][column].isFlag=false;
                  self.parseBoard[row][column].isDiscovered=true;
         }
-        
         self.updateGame();
     },
             
@@ -296,7 +323,8 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$route'
         const rows = self.game.numberOfRows;
         const columns = self.game.numberOfColumns;
         for (i=0; i<rows; i++) {              
-                for (j=0; j<columns; j++) {                    
+                for (j=0; j<columns; j++) {
+                    self.parseBoard[i][j].isFlag=false;
                     self.parseBoard[i][j].isDiscovered=true;                
                 }
                 
@@ -312,6 +340,7 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$route'
         
         //Discover the cell and substract move counter
         self.parseBoard[row][col].isDiscovered=true;
+        self.parseBoard[row][col].isFlag=false;
         self.game.movesLeft--;
 
             // Calculate the number of adjacent mines and put it
@@ -392,17 +421,18 @@ App.controller('GameController', ['$rootScope','$scope', 'GameService', '$route'
 
             return false;
 },
-    
+        
    
-    self.enableFlagMode = function()  {
-        self.flagMode=true;      
-    },
-    
-    self.putFlag = function(row,column)  {
-        self.parseBoard[row][column].isFlag=true;       
+    self.changeMode = function()  {
+        if (!self.flagMode) {
+            self.flagMode=true;
+            self.gameMode="Discover";
+        } else {
+            self.flagMode=false;
+            self.gameMode="Put flag";
+        }
     };
-      
-
+    
         
     if (param) {
         self.getGame(param);

@@ -45,7 +45,7 @@ public class Game implements Serializable {
     private int numberOfColumns;
     private int numberOfMines;
     private int movesLeft;
-    private int currentMoveIndex;
+    private boolean hasFirstMove;
     private Date lastTimePlayed;
     private Date totalTimePlayed;
     private User user;
@@ -115,13 +115,13 @@ public class Game implements Serializable {
         this.movesLeft = movesLeft;
     }
 
-    @Column(name="current_move_index")
-    public int getCurrentMoveIndex() {
-        return currentMoveIndex;
+    @Column(name="has_first_move")
+    public boolean isHasFirstMove() {
+        return hasFirstMove;
     }
 
-    public void setCurrentMoveIndex(int currentMoveIndex) {
-        this.currentMoveIndex = currentMoveIndex;
+    public void setHasFirstMove(boolean hasFirstMove) {
+        this.hasFirstMove = hasFirstMove;
     }
     
     @Column(name="last_time_played")

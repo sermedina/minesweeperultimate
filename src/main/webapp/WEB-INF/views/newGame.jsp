@@ -59,7 +59,7 @@
                     <option value="">-- Select --</option>
                 </select>
             </div>
-         <span ng-show="mineNumberValidation" class="error-messages">The number of mines is too big for this board!</span>
+         <span ng-show="mineNumberValidation" class="error-messages">The number of mines is too big for this board, don't push yourself too hard!</span>
      
         <button class="btn btn-success" ng-disabled="gameForm.$invalid" type="submit" id="sendBtn">Start game</button>
         </fieldset>

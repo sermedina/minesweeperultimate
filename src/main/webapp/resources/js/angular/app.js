@@ -1,6 +1,6 @@
 'use strict';
 
-var App = angular.module('myApp',['ngRoute','ngCookies','datatables']);
+var App = angular.module('myApp',['ngRoute','ngCookies','datatables','ngToast']);
 
 App.config(['$routeProvider', function($routeProvider) {
 	$routeProvider
@@ -52,5 +52,11 @@ App.config(['$routeProvider', function($routeProvider) {
 		.otherwise({redirectTo:'/'});
         
 
+}]);
+
+App.config(['ngToastProvider', function(ngToastProvider) {
+  ngToastProvider.configure({
+    animation: 'fade' // or 'fade'
+  });
 }]);
 

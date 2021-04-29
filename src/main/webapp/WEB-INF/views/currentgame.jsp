@@ -29,26 +29,38 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-
+        <toast></toast>
 <body>
     <div class="generic-container">
 
         <label>Moves left</label>
         <p>{{ ctrl.game.movesLeft }}</p>
+        
+
 
         <div ng-repeat="row in ctrl.parseBoard track by $index">
             <ul style="list-style-type: none;">
                 <li style="">
                     <div ng-repeat="cell in row track by $index">
-                        <button ng-class="{largeHeight: !cell.isDiscovered}" style="float:left" ng-click="ctrl.discoverCell($parent.$index,$index)">
-                            <div ng-show="cell.isDiscovered">{{ cell.mineNearby }}</div></button>
+                        <button ng-class="{largeHeight: !cell.isDiscovered || cell.mineNearby===0 || cell.mineNearby===-1, 
+                                'fa fa-flag no-color': cell.isFlag, 'fa fa-bomb w3-red': cell.mineNearby===-1 && cell.isDiscovered,
+                                'w3-green': cell.mineNearby===0 && cell.isDiscovered,
+                                'text-primary': cell.mineNearby===1 && cell.isDiscovered,
+                                'text-info': cell.mineNearby===2 && cell.isDiscovered,
+                                'text-success.pull-right': cell.mineNearby===3 && cell.isDiscovered,
+                                'text-warning': cell.mineNearby===4 && cell.isDiscovered,
+                                'text-danger': cell.mineNearby===5 && cell.isDiscovered}" 
+                                style="float:left" ng-click="ctrl.discoverCell($parent.$index,$index)">
+                            <div ng-show="cell.isDiscovered && cell.mineNearby!==-1 && cell.mineNearby!==0">{{ cell.mineNearby }}</div></button>
                     </div>
                     <br>
                 </li>
             </ul>
         </div>
     </div>                                   
-    <button class="btn btn-success" ng-if="!ctrl.game.finished" ng-click="ctrl.enableFlagMode()">Put flag</button>
-
+    <button class="btn" 
+            ng-class="{'fa fa-flag w3-red': !ctrl.flagMode, 'fa fa-eye w3-green': ctrl.flagMode}" 
+            ng-if="!ctrl.game.finished" ng-click="ctrl.changeMode()">{{ctrl.gameMode}}</button>
 </body>
+
 </html>

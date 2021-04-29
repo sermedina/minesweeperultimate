@@ -35,8 +35,12 @@
 <script src="resources/js/angular/angular-datatables.min.js"></script>
 <script src="resources/js/angular/angular-datatables.buttons.min.js"></script>
 <script src="resources/js/angular/angular-datatables.scroller.min.js"></script>
- <script type="text/javascript" src=" https://cdnjs.cloudflare.com/ajax/libs/checklist-model/1.0.0/checklist-model.min.js"></script>
-
+<script type="text/javascript" src=" https://cdnjs.cloudflare.com/ajax/libs/checklist-model/1.0.0/checklist-model.min.js"></script>
+ <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.5.7/angular-sanitize.min.js"></script>
+ <script type="text/javascript" src="http://www.cdn.der.rj.gov.br/AngularJS/1.5.7/angular-animate.min.js"></script>
+ <!--<script type="text/javascript" src=" https://cdn.jsdelivr.net/npm/angularjs-toast@latest/angularjs-toast.min.js"></script>-->
+ <script src="resources/js/angular/ngToast.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/angularjs-toast@latest/angularjs-toast.min.css" rel="stylesheet">
 
 <script src="resources/js/angular/app.js"></script>
 <script src="resources/js/service/ProfileService.js"></script>
@@ -48,7 +52,6 @@
 
 <script src="resources/js/controller/HomeController.js"></script>
 <script src="resources/js/controller/GameController.js"></script>
-<!--<script src="resources/js/controller/GameDetailsController.js"></script>-->
 
 
 
@@ -125,27 +128,27 @@
             </div>
         </div>	
     </div>
-                        <script>
-                        var toggle = true;
+                <script>
+                var toggle = true;
 										
-                        $(".sidebar-icon").click(function() {                
-                          if (toggle)
-                          {
-                                $(".page-container").addClass("sidebar-collapsed").removeClass("sidebar-collapsed-back");
-                                $("#menu span").css({"position":"absolute"});
-                          }
-                          else
-                          {
-                                $(".page-container").removeClass("sidebar-collapsed").addClass("sidebar-collapsed-back");
-                                setTimeout(function() {
-                                  $("#menu span").css({"position":"relative"});
-                                }, 400);
-                                        }
+                $(".sidebar-icon").click(function() {                
+                  if (toggle)
+                  {
+                        $(".page-container").addClass("sidebar-collapsed").removeClass("sidebar-collapsed-back");
+                        $("#menu span").css({"position":"absolute"});
+                  }
+                  else
+                  {
+                        $(".page-container").removeClass("sidebar-collapsed").addClass("sidebar-collapsed-back");
+                        setTimeout(function() {
+                          $("#menu span").css({"position":"relative"});
+                        }, 400);
+                                }
 
-                                        toggle = !toggle;
-                                    });
-                        </script>
-                        <!--js -->
+                                toggle = !toggle;
+                            });
+                </script>
+                <!--js -->
 
 
 <!-- Bootstrap Core JavaScript -->
