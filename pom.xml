@@ -528,6 +528,17 @@
                             <failBuild>true</failBuild>
                             <ignoreDirect>false</ignoreDirect>
                             <skip>true</skip>
+                            <artifactItems>
+                                <artifactItem>
+                                <!-- https://mvnrepository.com/artifact/com.heroku/webapp-runner -->
+                                <dependency>
+                                    <groupId>com.heroku</groupId>
+                                    <artifactId>webapp-runner</artifactId>
+                                    <version>9.0.41.0</version>
+                                    <destFileName>webapp-runner.jar</destFileName>
+                                </dependency>    
+                                </artifactItem>
+                            </artifactItems>
                         </configuration>
                     </execution>
                 </executions>
