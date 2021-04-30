@@ -1,1 +1,1 @@
-web : java -Dspring.profiles.active=default -jar $JAVA_OPTS target/*.jar
+web : java -Dspring.profiles.active=default -jar target/Minesweeper_Ultimate.jar
