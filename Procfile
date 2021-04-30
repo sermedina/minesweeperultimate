@@ -1,1 +1,1 @@
-web : java -jar target/MineSweeper_Ultimate.jar
+web : java -jar -Dserver.port=$PORT target/MineSweeper_Ultimate.jar
