@@ -1,1 +1,1 @@
-java -Dserver.port=$PORT -jar target/*.jar
+java -Dserver.port= $PORT -jar target/*.jar
