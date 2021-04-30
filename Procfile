@@ -1,1 +1,1 @@
-java -Dserver.port=$PORT -jar target/MineSweeper_Ultimate..jar
+java -Dserver.port=8086 -jar target/*.jar
