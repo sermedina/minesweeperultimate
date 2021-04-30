@@ -1,1 +1,1 @@
-web : java -jar target/Minesweeper_Ultimate.jar
+web : java -jar target/MineSweeper_Ultimate.jar
