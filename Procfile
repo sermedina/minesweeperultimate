@@ -1,1 +1,1 @@
-java -Dserver.port=8086 -jar target/*.jar
+java -Dserver.port=$PORT -jar target/*.jar
