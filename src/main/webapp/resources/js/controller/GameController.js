@@ -330,7 +330,7 @@ App.controller('GameController', ['ngToast','$rootScope','$scope', '$interval', 
             default:
                 if (self.game.movesLeft===1) {
                     ngToast.create('YOU WIN!');
-                    self.endGame();
+                    self.updateGame(true);
                  }
                  self.game.movesLeft--;
                  self.parseBoard[row][column].isFlag=false;
