@@ -25,7 +25,7 @@
                             <td>{{ game.movesLeft }}</td>
                             <td>{{ true == game.finished ? 'Yes' : 'No' }}</td>
                             <td>{{ game.lastTimePlayed | date:'MM/dd/yyyy  h:mma'  }}</td>
-                            <td>{{ game.totalTimePlayed | date:'MM/dd/yyyy  h:mma'  }}</td>
+                            <td>{{ game.totalTimePlayed | abs }} seconds</td>
 
 
                         </tr>
@@ -33,7 +33,6 @@
                     </tbody>
                 </table>
                 
-                <!--<button class="btn btn-success"  ng-click="ctrl.openAddUser()"  ></button>
 		</div>
 	</div>
 </div>

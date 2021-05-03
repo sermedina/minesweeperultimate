@@ -5,13 +5,6 @@ var App = angular.module('myApp',['ngRoute','ngCookies','datatables','ngToast'])
 App.config(['$routeProvider', function($routeProvider) {
 	$routeProvider
                                            
-                .when('/profile', {
-			templateUrl: '/profile',
-			controller : "ProfileController as ctrl"
-	
-		})
-
-                
                 .when('/changePassword', {
 			templateUrl: 'changePassword'
                 
@@ -47,6 +40,11 @@ App.config(['$routeProvider', function($routeProvider) {
                 	controller : "GameController as ctrl"
 		})
                 
+                .when('/signUp', {
+			templateUrl: 'login/signUp',
+                	controller : "UserController as ctrl"
+		})
+                
       
 	
 		.otherwise({redirectTo:'/'});
@@ -59,4 +57,10 @@ App.config(['ngToastProvider', function(ngToastProvider) {
     animation: 'fade' // or 'fade'
   });
 }]);
+
+App.filter('abs', function () {
+  return function(val) {
+    return Math.abs(val);
+  };
+});
 

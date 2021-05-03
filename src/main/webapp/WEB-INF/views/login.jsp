@@ -5,7 +5,7 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
 <!DOCTYPE html>
-<html lang="en">
+<html ng-app="myApp">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,6 +21,35 @@
     <link rel="stylesheet" href="resources/css/style2.css">
     <link rel="stylesheet"  href="resources/css/app.css">
     <link rel="stylesheet" href="resources/css/w3.css">
+    
+<!-- jQuery -->
+<link href='//fonts.googleapis.com/css?family=Roboto:700,500,300,100italic,100,400' rel='stylesheet' type='text/css'>
+<!-- lined-icons -->
+<link rel="stylesheet" href="resources/css/icon-font.min.css" type='text/css' />
+<!-- //lined-icons -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="resources/js/jquery/jquery.dataTables.min.js"></script>
+
+
+<script src="${contextPath}/resources/js/bootstrap/bootstrap.min.js"></script>
+
+    <!--Angular-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-route.js"></script>
+    <script src="resources/js/angular/angular-cookies.min.js"></script>
+    <script src="resources/js/angular/angular-datatables.min.js"></script>
+    <script src="resources/js/angular/angular-datatables.buttons.min.js"></script>
+    <script src="resources/js/angular/angular-datatables.scroller.min.js"></script>
+    <script type="text/javascript" src=" https://cdnjs.cloudflare.com/ajax/libs/checklist-model/1.0.0/checklist-model.min.js"></script>
+     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.5.7/angular-sanitize.min.js"></script>
+     <script type="text/javascript" src="http://www.cdn.der.rj.gov.br/AngularJS/1.5.7/angular-animate.min.js"></script>
+     <!--<script type="text/javascript" src=" https://cdn.jsdelivr.net/npm/angularjs-toast@latest/angularjs-toast.min.js"></script>-->
+     <script src="resources/js/angular/ngToast.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/angularjs-toast@latest/angularjs-toast.min.css" rel="stylesheet">
+    
+    <script src="resources/js/angular/app.js"></script>
+    <script src="resources/js/service/UserService.js"></script>
+    <script src="resources/js/controller/UserController.js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -29,7 +58,7 @@
     <![endif]-->
 </head>
 
-<body>
+<body ng-controller="UserController">
 
     <header class="w3-container  w3-margin-bottom">
            <!-- <img src="resources/img/minesweeper_main_logo.png">          -->              
@@ -65,6 +94,8 @@
                                     </div>
 
                                 </form>
+
+                                         <!--<button class="btn btn-success"  ng-click="openRegisterModal()" >Create account</button>-->
                             </div>
                         </div>
                     </div>
@@ -78,8 +109,42 @@
             </div>        
         </div>
     </div>
+                                        
+    <div id="registerModal" class="w3-modal " >
+            <div class="w3-modal-content w3-small">
+                <header class="w3-container w3-theme-gradient1"> 
+                    <h2 class="w3-text-white">Sign Up</h2>
+                </header>
+                 <form ng-submit="signUp()" name="userForm"  class="forms-main" id="add-user-form"
+          novalidate ng-class="{'form-error':submitted}">
+        <fieldset>
+        <h2 class="form-signin-heading">Sign Up</h2>
+        
+            <div class="control-group" id="usernameControlGroup">
+                <input type="text" name="username" required ng-model="formData.username" class="form-control" placeholder="Username"
+                            autofocus="true">
+            </div>
+            <span ng-show="userForm.username.$dirty" class="error-messages">{{serverErrors['username']}}</span>
+        
+       
+            <div class="control-group" id="passwordControlGroup">
+                <input type="password" name="password" required ng-model="formData.password" class="form-control" placeholder="Password"
+                            autofocus="true">
+            </div>
+             <span  ng-show="userForm.password.$dirty" class="error-messages">{{serverErrors['password']}}</span>
+        
+     
+        <button class="btn btn-success" ng-disabled="userForm.$invalid" type="submit" id="sendBtn">Submit</button>
+        </fieldset>
+    </form>
+            </div>
+        </div>
+            <script>
+                    $("#registerModal").click(function(ev){
+                    if(ev.target !== this) return;
+                    $('#registerModal').modal('hide');
+                  });
+            </script>
 <!-- /container -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="${contextPath}/resources/js/bootstrap/bootstrap.min.js"></script>
 </body>
 </html>

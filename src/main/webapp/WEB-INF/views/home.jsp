@@ -111,7 +111,7 @@
                 </form>
 
                 <ul>
-                    <li><a class="tooltips" href="#/client/profile"><span>Profile</span><i class="lnr lnr-user"></i></a></li>
+                    <!--<li><a class="tooltips" href="#/client/profile"><span>Profile</span><i class="lnr lnr-user"></i></a></li>-->
                     <li><a class="tooltips" href="#" onclick="document.forms['logoutForm'].submit()"><span>Log out</span><i class="lnr lnr-power-switch"></i></a></li>
 
                 </ul>

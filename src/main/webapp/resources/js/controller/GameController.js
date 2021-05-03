@@ -1,8 +1,13 @@
-App.controller('GameController', ['ngToast','$rootScope','$scope', 'GameService', '$route','$routeParams','$location','DTOptionsBuilder', 'DTColumnDefBuilder',
-    function(ngToast,$rootScope,$scope,GameService,$route,$routeParams, $location,DTOptionsBuilder,DTColumnDefBuilder) {            
+App.controller('GameController', ['ngToast','$rootScope','$scope', '$interval', '$timeout','GameService', '$route','$routeParams','$location','DTOptionsBuilder', 'DTColumnDefBuilder',
+    function(ngToast,$rootScope,$scope,$interval,$timeout, GameService,$route,$routeParams, $location,DTOptionsBuilder,DTColumnDefBuilder) {            
     
     var self = this;
     
+    self.totalElapsedMs = 0;
+    self.elapsedMs = 0;
+    self.startTime;
+    self.timerPromise;
+   
     var param = $routeParams.id;
 
     $scope.submitted = false;
@@ -43,7 +48,7 @@ App.controller('GameController', ['ngToast','$rootScope','$scope', 'GameService'
     
      self.isValidCell = function(row,col)
         {
-            
+            //Case when new game or already played game
             let rows = self.formData!==undefined && JSON.stringify(self.formData) !== '{}'?self.formData.numberOfRows:self.game.numberOfRows;
             let columns = self.formData!==undefined && JSON.stringify(self.formData) !== '{}'?self.formData.numberOfColumns:self.game.numberOfColumns;
             // Returns true if row number and column number
@@ -117,10 +122,17 @@ App.controller('GameController', ['ngToast','$rootScope','$scope', 'GameService'
         
     },
             
-    self.updateGame = function(){            
+    self.updateGame = function(gameFinished){            
 
+    if (!self.game.finished) {
+            self.game.totalTimePlayed = -self.getElapsedMs();
             self.game.lastTimePlayed= new Date();
             self.game.board= JSON.stringify(self.parseBoard);
+            if (gameFinished) {
+               self.game.finished=true; 
+            }
+            // Stop time tracking
+            self.stop();
             GameService.updateGame(self.game)
               .then (function(response) {
                   $scope.message = response.status;           
@@ -128,7 +140,6 @@ App.controller('GameController', ['ngToast','$rootScope','$scope', 'GameService'
               },
               
               function (errors) {
-                 
                     $scope.serverErrors=errors.data;
                     console.log(errors.data);
                     for (var errorKey in errors.data) {
@@ -137,7 +148,7 @@ App.controller('GameController', ['ngToast','$rootScope','$scope', 'GameService'
                   
                
             });
-        
+        }   
         
     },        
             
@@ -147,7 +158,10 @@ App.controller('GameController', ['ngToast','$rootScope','$scope', 'GameService'
             function(d) {
                  self.game = d;
                  self.parseBoard= JSON.parse(self.game.board);
-                 console.log(self.parseBoard);
+                 console.log(d);
+                 if (!self.game.finished) {
+                    self.start();
+                }
                       
             },
             function(errResponse){
@@ -156,6 +170,14 @@ App.controller('GameController', ['ngToast','$rootScope','$scope', 'GameService'
         );
 
     },
+            
+    //Save the game only when browser closed or logout   
+    $scope.$on('$locationChangeStart', function () {
+        if (self.game && self.getElapsedMs()>0 && $location.path() !== '/game/currentgame/' + self.game.id) {                     
+            self.updateGame();
+    }
+
+});
             
             
    //These functions are based in
@@ -283,7 +305,6 @@ App.controller('GameController', ['ngToast','$rootScope','$scope', 'GameService'
             }else {
                 self.parseBoard[row][column].isFlag=true;
             }    
-            self.updateGame();
             return;
         }
 
@@ -291,31 +312,30 @@ App.controller('GameController', ['ngToast','$rootScope','$scope', 'GameService'
             case -1:
               self.discoverAllCells();
               ngToast.danger('YOU LOSE');
-              self.game.finished=true;
+              self.updateGame(true);
               break;
             case 0:
                 if(self.game.movesLeft===1) {
                 ngToast.create('YOU WIN!');
                 self.game.movesLeft--;
-                self.game.finished=true;
+                self.updateGame(true);
             } else {
                 self.discoverZeroCell(row,column);
                 if(self.game.movesLeft===0) {
                   ngToast.create('YOU WIN!');
-                  self.game.finished=true;
+                  self.updateGame(true);
                 }
             }
               break;
             default:
                 if (self.game.movesLeft===1) {
                     ngToast.create('YOU WIN!');
-                    self.game.finished=true;
+                    self.endGame();
                  }
                  self.game.movesLeft--;
                  self.parseBoard[row][column].isFlag=false;
                  self.parseBoard[row][column].isDiscovered=true;
         }
-        self.updateGame();
     },
             
     self.discoverAllCells = function()  {
@@ -422,7 +442,37 @@ App.controller('GameController', ['ngToast','$rootScope','$scope', 'GameService'
             return false;
 },
         
-   
+    self.start = function() {    
+      if (!self.timerPromise) {
+        self.startTime = new Date();
+        //Start counting from last total time played
+        self.startTime.setSeconds(self.startTime.getSeconds() + self.game.totalTimePlayed);
+        self.timerPromise = $interval(function() {
+        let now = new Date();
+        self.elapsedMs = Math.abs(((self.startTime.getTime()/1000) -(now.getTime()/1000) ).toFixed(1));
+          
+        }, 1);
+      }
+    };
+    
+    self.stop = function() {
+      if (self.timerPromise) {
+        $interval.cancel(self.timerPromise);
+        self.timerPromise = undefined;
+        self.totalElapsedMs += self.elapsedMs;
+        self.elapsedMs = 0;
+      }
+    },
+    
+    self.reset = function() {
+      self.startTime = new Date();
+      self.totalElapsedMs = self.elapsedMs = 0;
+    },
+    
+    self.getElapsedMs = function() {
+      return self.elapsedMs;
+    },
+            
     self.changeMode = function()  {
         if (!self.flagMode) {
             self.flagMode=true;
@@ -436,8 +486,10 @@ App.controller('GameController', ['ngToast','$rootScope','$scope', 'GameService'
         
     if (param) {
         self.getGame(param);
-    } else {
-         self.getGameList();
+    } else { 
+         $timeout(function(){ 
+                     self.getGameList();
+         }, 1000);
     }    
    
     
@@ -454,6 +506,11 @@ App.controller('GameController', ['ngToast','$rootScope','$scope', 'GameService'
         $location.path("/home/games");
     };
     
+    window.onbeforeunload = confirmExitLogout;
+    function confirmExitLogout()
+    {
+      return undefined;
+    }
         
  self.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType('full_numbers')

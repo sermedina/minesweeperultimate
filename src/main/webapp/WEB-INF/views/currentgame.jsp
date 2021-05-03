@@ -14,7 +14,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>New Game</title>
+    <title>Current Game</title>
 
     <link href="${contextPath}/resources/css/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="${contextPath}/resources/css/common.css" rel="stylesheet">
@@ -35,6 +35,12 @@
 
         <label>Moves left</label>
         <p>{{ ctrl.game.movesLeft }}</p>
+        
+        <label>Number of mines</label>
+        <p>{{ ctrl.game.numberOfMines }}</p>
+        
+        <div ng-show="!ctrl.game.finished"><strong>Elapsed Time: </strong>{{ctrl.getElapsedMs()}} seconds</div>
+        <div ng-show="ctrl.game.finished"><strong>Play Time: </strong>{{ctrl.game.totalTimePlayed | abs}} seconds</div>
         
 
 

@@ -19,7 +19,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.Type;
@@ -47,7 +46,7 @@ public class Game implements Serializable {
     private int movesLeft;
     private boolean hasFirstMove;
     private Date lastTimePlayed;
-    private Date totalTimePlayed;
+    private double totalTimePlayed;
     private User user;
   
     @Id
@@ -62,7 +61,6 @@ public class Game implements Serializable {
     
     @Type(type = "jsonb")
     @Column(columnDefinition = "jsonb")
-    //@Lob
     public String getBoard() {
         return board;
     }
@@ -134,11 +132,11 @@ public class Game implements Serializable {
     }
     
     @Column(name="total_time_played")
-    public Date getTotalTimePlayed() {
+    public double getTotalTimePlayed() {
         return totalTimePlayed;
     }
 
-    public void setTotalTimePlayed(Date totalTimePlayed) {
+    public void setTotalTimePlayed(double totalTimePlayed) {
         this.totalTimePlayed = totalTimePlayed;
     }
     
