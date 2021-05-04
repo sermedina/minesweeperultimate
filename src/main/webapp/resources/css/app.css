@@ -26,7 +26,8 @@ body, .form-control{
 }
 
 .generic-container {
-  width:80%;
+  height:1200px;
+  width:60%;
   margin-left: 20px;
   margin-top: 20px;
   margin-bottom: 20px;
