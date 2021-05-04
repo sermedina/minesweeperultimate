@@ -2,10 +2,11 @@ package com.deviget.minesweeperultimate.validator;
 
 import com.deviget.minesweeperultimate.exception.MyValidationException;
 import com.deviget.minesweeperultimate.pojo.User;
-import com.deviget.minesweeperultimate.service.UserService;
+import com.deviget.minesweeperultimate.repository.UserDao;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ import org.springframework.validation.Validator;
 public class UserValidator implements Validator {
     
     @Autowired
-    private UserService userService;
+    private UserDao userRepository;
     
     @Autowired
     private MessageSource messageSource;
@@ -37,7 +38,7 @@ public class UserValidator implements Validator {
     public void validate(Object o, Errors errors) {
         User user = (User) o;
 
-        
+
         Map customValidationErrors = new HashMap();
          
         if (checkInputString(user.getUsername())) {
@@ -50,17 +51,19 @@ public class UserValidator implements Validator {
                 customValidationErrors.put("username", messageSource.getMessage("Size.userForm.username", null, 
                 new Locale("es", "ES")));
             }
+            
 
-            if (userService.findByUsername(user.getUsername()) != null ) {
-                customValidationErrors.put("username", messageSource.getMessage("Duplicate.userForm.username", null, 
-                new Locale("es", "ES")));
-            }
+            Optional<User> username =   (Optional<User>) userRepository.findByUsername(user.getUsername());
+                if (username.isPresent() ) {
+                    customValidationErrors.put("username", messageSource.getMessage("Duplicate.userForm.username", null, 
+                    new Locale("es", "ES")));
+                }
+
         }
-       
-         
-        if (customValidationErrors!=null && !customValidationErrors.isEmpty()) {
-			throw new MyValidationException(customValidationErrors);
-		}
+
+        if (!customValidationErrors.isEmpty()) {
+            throw new MyValidationException(customValidationErrors);
+        }
 
     }
     

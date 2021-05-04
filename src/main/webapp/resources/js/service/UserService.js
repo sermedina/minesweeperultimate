@@ -14,7 +14,7 @@ App.factory('UserService', ['$http', '$q','$location', function($http, $q, $loca
                 }, 
                 function(errResponse){
                     console.error('Error while registering');
-                    return $q.reject(errResponse);
+                    return errResponse;
                 }
             );
         }

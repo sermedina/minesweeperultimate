@@ -40,11 +40,6 @@ App.config(['$routeProvider', function($routeProvider) {
                 	controller : "GameController as ctrl"
 		})
                 
-                .when('/signUp', {
-			templateUrl: 'login/signUp',
-                	controller : "UserController as ctrl"
-		})
-                
       
 	
 		.otherwise({redirectTo:'/'});

@@ -14,27 +14,27 @@ App.controller('UserController', ['$rootScope','$scope', 'UserService', '$locati
             
     
     $scope.signUp = function(){
+            $scope.alreadyExists="";
             $scope.submitted = true;
             console.log($scope.formData);
             UserService.signUp($scope.formData)
               .then (function(response) {
                   console.log(response.status);
+          
+          if (response.status===500) {
+                  $scope.userForm.username.$dirty = true;
+                         $scope.alreadyExists = "User already exists";
+          } else {
                   $scope.message = response.status;           
                   $scope.submitted = false;
                   $scope.formData=response.data;
                   $scope.addSuccessful();
+              }
               },
               
               function (errors) {
-                 
-                    $scope.serverErrors=errors.data;
-                    console.log(errors.data);
-                    for (var errorKey in errors.data) {
-                    //console.log(errorKey + ':' + errors.data[errorKey]);
-                    $scope.userForm[errorKey].$dirty = true;
-                    }                 
-                  
-               
+                 console.log(errors);
+
             });
         
         
@@ -50,7 +50,8 @@ App.controller('UserController', ['$rootScope','$scope', 'UserService', '$locati
     };        
     
     $scope.closeModal = function (){             
-        document.getElementById('addSuccessful').style.display='none';
+         $("#addSuccessful").css('display','none');
+         $("#registerModal").css('display','none'); 
     };
 
         

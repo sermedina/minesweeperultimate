@@ -55,7 +55,7 @@ public class UserController {
 
  
     @RequestMapping(value="/signUp",method=RequestMethod.POST)
-    public @ResponseBody Response signUp( @RequestBody  User userForm ){
+    public @ResponseBody Response signUp(@Valid @RequestBody  User userForm ){
         Response res = new Response();  
         userService.save(userForm);
         res.setStatus("Account created successfully");
@@ -67,7 +67,6 @@ public class UserController {
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(Model model, String error, String logout) {
-
         if (error != null) {
             model.addAttribute("error", "Error: Invalid credentials.");
         }

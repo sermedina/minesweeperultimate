@@ -95,7 +95,7 @@
 
                                 </form>
 
-                                         <!--<button class="btn btn-success"  ng-click="openRegisterModal()" >Create account</button>-->
+                                         <button class="btn btn-success"  ng-click="openRegisterModal()" >Create account</button>
                             </div>
                         </div>
                     </div>
@@ -124,7 +124,7 @@
                 <input type="text" name="username" required ng-model="formData.username" class="form-control" placeholder="Username"
                             autofocus="true">
             </div>
-            <span ng-show="userForm.username.$dirty" class="error-messages">{{serverErrors['username']}}</span>
+            <span ng-show="userForm.username.$dirty" class="error-messages">{{alreadyExists}}</span>
         
        
             <div class="control-group" id="passwordControlGroup">
@@ -132,19 +132,33 @@
                             autofocus="true">
             </div>
              <span  ng-show="userForm.password.$dirty" class="error-messages">{{serverErrors['password']}}</span>
+             <br>
+             <br>
         
      
         <button class="btn btn-success" ng-disabled="userForm.$invalid" type="submit" id="sendBtn">Submit</button>
+        <button class="btn btn-success" type="button" ng-click="closeModal()">Cancel</button> 
         </fieldset>
     </form>
             </div>
         </div>
-            <script>
-                    $("#registerModal").click(function(ev){
-                    if(ev.target !== this) return;
-                    $('#registerModal').modal('hide');
-                  });
-            </script>
+                                        
+        <div id="addSuccessful" class="w3-modal " >
+            <div class="w3-modal-content w3-small">
+                <header class="w3-container w3-theme-gradient1"> 
+                    <h2 class="w3-text-white">Success notification</h2>
+                </header>
+                <div class="w3-container w3-row-padding">
+                    <div>
+                        <h5>{{message}}</h5>
+                    </div>
+                    <div class="w3-right w3-margin-2">                    
+                        <button class="w3-btn w3-ripple w3-green" ng-click="closeModal()">Ok</button>                      
+                    </div>
+                </div>                
+            </div>
+        </div>
+            
 <!-- /container -->
 </body>
 </html>

@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userRepository;
     
-    @Lazy
+    
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
