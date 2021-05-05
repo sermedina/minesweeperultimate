@@ -42,7 +42,6 @@ a {
 a:hover { transition: all 200ms ease-in-out; }
 
 .page-container {
-  min-width: 1260px;
   position: relative;
   top: 0;
   left: 0;
@@ -1958,7 +1957,6 @@ h2.inner-tittle,h3.inner-tittle {
 }
 .graph{
        background: #fff;
-    padding: 2em 2em;
     position: relative;
     box-shadow: 0 1px 1px rgba(0,0,0,.05);
     -o-box-shadow: 0 1px 1px rgba(0,0,0,.05);
@@ -5426,6 +5424,7 @@ footer {
 footer  p {
 	color: #fff;
     font-size: 1em;
+	padding-right: 252px;
 	margin: 0;
 }
 .footer p {
@@ -5697,7 +5696,6 @@ footer  p a:hover ,.footer p a:hover{
 		width: 708px!important;
 	}
 	.page-container {
-		min-width: 1032px;
 		position: relative;
 		top: 0;
 		left: 0;
@@ -5902,7 +5900,6 @@ footer  p a:hover ,.footer p a:hover{
 		left: 237px;
 	}
 	.page-container {
-		min-width: 991px;
 		position: relative;
 		top: 0;
 		left: 0;
@@ -5991,7 +5988,6 @@ footer  p a:hover ,.footer p a:hover{
 }
 @media (max-width:800px){
 	.page-container {
-		min-width:800px;
 		position: relative;
 		top: 0;
 		left: 0;
@@ -6031,7 +6027,7 @@ footer  p a:hover ,.footer p a:hover{
 	}
 	.page-container.sidebar-collapsed .left-content {
 		float: right;
-		width: 93%;
+		width: 85%;
 	}
 	.ribbon-inner {
 		background: #fff;
@@ -6075,20 +6071,4 @@ footer  p a:hover ,.footer p a:hover{
 		height: 350px!important;
 		width: 500px!important;
 	}
-}
-
-@media (max-width:500px){
-
-.generic-container {
-  width:45% !important;
-}
-
-}
-
-@media (max-width:400px){
-
-.generic-container {
-  width:30% !important;
-}
-
 }

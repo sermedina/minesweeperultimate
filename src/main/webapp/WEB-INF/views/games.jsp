@@ -1,17 +1,18 @@
 
 
+
+
 <div class="generic-container">
-	<div class="graph">
-		<!-- Default panel contents -->
-	    <div class="panel-heading"><span class="lead">Games</span></div>
-	    <div class="tables">
-	    	<table datatable="ng" 
+    <div class="graph">
+	    <div class="dataTables_wrapper">
+                <div class="panel-heading"><span class="lead">Games</span></div>
+	    	<table datatable="ng" id="gametable" 
                         dt-options="ctrl.dtOptions" dt-column-defs="ctrl.dtColumnDefs"
-                        class="w3-table w3-bordered table-responsive table-bordered w3-hoverable w3-small">
+                        class="display nowrap dataTable dtr-inline collapsed" style="width: 100%;" role="grid">
 	            <thead>
-	                <tr class="active">
+	                <tr>
 	                    <th>ID</th>
-                            <th>Moves left</th>
+                            <!--<th>Moves left</th>-->
                             <th>Finished</th>
                             <th>Last time played</th>
                             <th>Total time played</th>
@@ -20,20 +21,21 @@
 	            </thead>
                     <tbody>
                         <tr ng-repeat="game in ctrl.gamesForList">            
-                            <td><a href="" ng-click="ctrl.showDetail(game.id)">{{ game.id }}</a></td>
-
-                            <td>{{ game.movesLeft }}</td>
-                            <td>{{ true == game.finished ? 'Yes' : 'No' }}</td>
-                            <td>{{ game.lastTimePlayed | date:'MM/dd/yyyy  h:mma'  }}</td>
-                            <td>{{ game.totalTimePlayed | abs }} seconds</td>
-
-
+                            <td ng-click="ctrl.showDetail(game.id)"><a href="" >{{ game.id }}</a></td>
+                            <!--<td>{{ game.movesLeft }}</td>-->
+                            <td ng-click="ctrl.showDetail(game.id)">{{ true == game.finished ? 'Yes' : 'No' }}</td>
+                            <td ng-click="ctrl.showDetail(game.id)">{{ game.lastTimePlayed | date:'MM/dd/yyyy  h:mma'  }}</td>
+                            <td ng-click="ctrl.showDetail(game.id)">{{ game.totalTimePlayed | abs }} seconds</td>
                         </tr>
-
                     </tbody>
                 </table>
-                
-		</div>
-	</div>
+            </div>
+        </div>
 </div>
+    <script>
+        $(document).ready(function() {
+                    $('#gametable').DataTable();
+        });
+    </script>
+
 

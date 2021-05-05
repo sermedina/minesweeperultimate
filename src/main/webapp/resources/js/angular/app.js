@@ -2,7 +2,7 @@
 
 var App = angular.module('myApp',['ngRoute','ngCookies','datatables','ngToast']);
 
-App.config(['$routeProvider', function($routeProvider) {
+App.config(['$routeProvider','$locationProvider', function($routeProvider,$locationProvider) {
 	$routeProvider
                                            
                 .when('/changePassword', {
@@ -44,8 +44,12 @@ App.config(['$routeProvider', function($routeProvider) {
 	
 		.otherwise({redirectTo:'/'});
         
+$locationProvider.hashPrefix('');
+        
 
 }]);
+
+
 
 App.config(['ngToastProvider', function(ngToastProvider) {
   ngToastProvider.configure({

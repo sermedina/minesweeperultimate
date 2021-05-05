@@ -1,5 +1,5 @@
-App.controller('GameController', ['ngToast','$rootScope','$scope', '$interval', '$timeout','GameService', '$route','$routeParams','$location','DTOptionsBuilder', 'DTColumnDefBuilder',
-    function(ngToast,$rootScope,$scope,$interval,$timeout, GameService,$route,$routeParams, $location,DTOptionsBuilder,DTColumnDefBuilder) {            
+App.controller('GameController', ['ngToast','$rootScope','$scope','$window', '$interval', '$timeout','GameService', '$route','$routeParams','$location','DTOptionsBuilder', 'DTColumnDefBuilder',
+    function(ngToast,$rootScope,$scope,$window,$interval,$timeout, GameService,$route,$routeParams, $location,DTOptionsBuilder,DTColumnDefBuilder) {            
     
     var self = this;
     
@@ -29,10 +29,17 @@ App.controller('GameController', ['ngToast','$rootScope','$scope', '$interval', 
     $scope.numberOfRowsList = self.rangeArray(3,30);
     $scope.numberOfColumnsList = self.rangeArray(3,30);
     $scope.numberOfMinesList = self.rangeArray(3,99);
+    
      
-    
-    
-    self.getGameList = function(){
+    self.hideSideBar= function(){
+        $(".page-container").addClass("sidebar-collapsed").removeClass("sidebar-collapsed-back");
+        $("#menu span").css({"position":"absolute"});
+        $("footer").hide();
+        
+    },
+ 
+    self.getGameList = function(){  
+        
         GameService.getGameList()        
         .then(
             function(d) {                
@@ -45,7 +52,7 @@ App.controller('GameController', ['ngToast','$rootScope','$scope', '$interval', 
             }
         );
     };
-    
+      
      self.isValidCell = function(row,col)
         {
             //Case when new game or already played game
@@ -483,7 +490,9 @@ App.controller('GameController', ['ngToast','$rootScope','$scope', '$interval', 
         }
     };
     
-        
+    if ($window.innerWidth<400) {
+           self.hideSideBar();
+    }
     if (param) {
         self.getGame(param);
     } else { 
@@ -514,8 +523,9 @@ App.controller('GameController', ['ngToast','$rootScope','$scope', '$interval', 
         
  self.dtOptions = DTOptionsBuilder.newOptions()
             .withPaginationType('full_numbers')
-            .withDisplayLength(5)
+            .withDisplayLength(10)
             .withOption('order', [0, 'desc'])
+            .withOption('responsive', true)
             .withLanguage($rootScope.resources.tableMessage);
             
     self.dtColumnDefs = [
