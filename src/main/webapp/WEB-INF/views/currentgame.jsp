@@ -33,16 +33,20 @@
 <body>
     <div class="generic-container">
 
-        <label>Moves left</label>
-        <p>{{ ctrl.game.movesLeft }}</p>
+        <span class="label label-success lb-md"><i class="fas fa-arrow-right"></i> Moves left</span>
+        <span></span>
+        <p class="lb-bold">{{ ctrl.game.movesLeft }}</p>
+        <span></span>
+        <span class="label label-warning lb-md"><i class="fas fa-bomb"></i> Number of mines</span>       
+        <p class="lb-bold">{{ ctrl.game.numberOfMines }}</p>
         
-        <label>Number of mines</label>
-        <p>{{ ctrl.game.numberOfMines }}</p>
-        
-        <div ng-show="!ctrl.game.finished"><strong>Elapsed Time: </strong>{{ctrl.getElapsedMs()}} seconds</div>
-        <div ng-show="ctrl.game.finished"><strong>Play Time: </strong>{{ctrl.game.totalTimePlayed | abs}} seconds</div>
-        
-
+        <span ng-show="!ctrl.game.finished" class="label label-info lb-md"><i class="fas fa-clock"></i> Elapsed Time:</span>
+        <strong ng-show="!ctrl.game.finished">{{ctrl.getElapsedMs()}} seconds</strong>
+        <span ng-show="ctrl.game.finished" class="label label-info lb-md"><i class="fas fa-tag"></i> Play Time:</span> 
+        <strong ng-show="ctrl.game.finished">{{ctrl.game.totalTimePlayed | abs}} seconds</strong>
+        <br>
+        <br>
+  
 
         <div ng-repeat="row in ctrl.parseBoard track by $index">
             <ul style="list-style-type: none;">

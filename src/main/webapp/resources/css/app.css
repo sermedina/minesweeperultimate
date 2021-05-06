@@ -45,3 +45,11 @@ body, .form-control{
   float: left;
   clear: none; 
 }
+
+.lb-md {
+  font-size: 12px !important;
+}
+
+.lb-bold {
+  font-weight: bold;
+}
