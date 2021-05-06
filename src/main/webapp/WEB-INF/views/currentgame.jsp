@@ -63,10 +63,14 @@
                 </li>
             </ul>
         </div>
-    </div>                                   
-    <button class="btn" 
+          <button class="btn" 
             ng-class="{'fa fa-flag w3-red': !ctrl.flagMode, 'fa fa-eye w3-green': ctrl.flagMode}" 
             ng-if="!ctrl.game.finished" ng-click="ctrl.changeMode()">{{ctrl.gameMode}}</button>
+        
+            
+    <button class="btn w3-green" 
+            ng-if="ctrl.game.finished" ng-click="ctrl.newGame()">Try again</button>
+    </div>                                   
 </body>
 
 </html>
