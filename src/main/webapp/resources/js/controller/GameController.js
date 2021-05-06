@@ -499,6 +499,19 @@ App.controller('GameController', ['ngToast','$rootScope','$scope','$window','$in
         }
     };
     
+    document.addEventListener(
+        "visibilitychange"
+  , () => { 
+    if (document.hidden) { 
+        self.updateGame();
+    }else{
+        if (self.game) {
+            self.start();
+        }
+    }
+        }
+    );
+    
     if ($window.innerWidth<400) {
            self.hideSideBar();
     }
