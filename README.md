@@ -1,6 +1,8 @@
 # minesweeperultimate
 Minesweeper persistent game with Java Spring framework and AngularJS.
 
+You can check it here http://minesweeper-ultimate-api.herokuapp.com/
+
 First steps
 
 Backend features:\
@@ -26,7 +28,9 @@ Logical Decisions:
 -AngularJS SPA for all the user interface.\
 -Construction of board with buttons in the DOM.\
 -Reactive interaction when playing the game.\
+-Persist game only when leaving current game (change route, sign out, close tab or close browser).\
+-Pause and resume game when not active (Applies for desktop and mobile).\
 -Spring boot integration.\
--Heroku for the deployment (this could change).
+-Heroku for deployment.
 
 
