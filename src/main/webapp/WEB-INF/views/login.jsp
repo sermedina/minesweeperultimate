@@ -81,10 +81,10 @@
                                         <!--#set($value = "#if($error!=null)'has-error'{else}''#end")-->
                                         <span>${message}</span>
                                         <div>
-                                            <input name="username" type="text" class="w3-input w3-border w3-margin-bottom" placeholder="Usuario"/>
+                                            <input name="username" type="text" class="w3-input w3-border w3-margin-bottom" placeholder="Username"/>
                                         </div>
                                         <div>
-                                            <input name="password" type="password" class="w3-input w3-border w3-margin-bottom" placeholder="Contraseña"/>
+                                            <input name="password" type="password" class="w3-input w3-border w3-margin-bottom" placeholder="Password"/>
                                         </div>
                                         <span>${error}</span>
                                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
